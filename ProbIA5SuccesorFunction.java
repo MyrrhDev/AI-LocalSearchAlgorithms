@@ -18,9 +18,11 @@ public class ProbIA5SuccesorFunction implements SuccessorFunction{
         // (flip all the consecutive pairs of coins and generate new states
         // Add the states to retval as Succesor("flip i j", new_state)
         // new_state has to be a copy of state
+        
 
         return retval;
 
     }
+@showsep93
 
 }
