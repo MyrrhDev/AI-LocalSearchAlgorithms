@@ -7,7 +7,7 @@ package bicingoptimiser;
 
 /**
  *
- * @author Josep
+ * @author Josep Clotet Ginovart, Fernando Marimon Llopis, Mayra Pastor Valdivia
  */
 public class BicingOptimiser {
 
