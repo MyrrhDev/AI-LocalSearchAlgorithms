@@ -4,18 +4,14 @@
  * and open the template in the editor.
  */
 package bicingoptimiser;
+import aima.search.framework.GoalTest;
 
 /**
  *
  * @author Josep Clotet Ginovart, Fernando Marimon Llopis, Mayra Pastor Valdivia
  */
-public class BicingOptimiser {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
-    
+public class BicingOptimiserGoalTest implements GoalTest{
+    public boolean isGoalState(Object aState) {
+        return(false);
+  }
 }
