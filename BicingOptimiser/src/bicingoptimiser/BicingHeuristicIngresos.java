@@ -5,10 +5,15 @@
  */
 package bicingoptimiser;
 
+import aima.search.framework.HeuristicFunction;
 /**
  *
  * @author Josep Clotet Ginovart, Fernando Marimon Llopis, Mayra Pastor Valdivia
  */
-class BicingHeuristicIngresos {
-    
+public class BicingHeuristicIngresos implements HeuristicFunction {
+// Aquest valora els costos. verificar que se puede con int la sig. funcion:
+		public double getHeuristicValue(Object state) {
+			BicingOptimiserState estado = (BicingOptimiserState ) state;
+                        return estato.getIngresos();
+		}
 }
