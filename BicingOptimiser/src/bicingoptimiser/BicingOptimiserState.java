@@ -184,5 +184,52 @@ public class BicingOptimiserState {
         this.estaciones = estadoACopiar.estaciones;
     }
    
+    //--------------------------Heuristico--------------------------------------
+
+    public double getIngresos() {
+        double ingresos;
+        
+        for(int i = 0; i < furgos.length; ++i) {
+            if(furgos[i] != null) {
+              ingresos += (Integer) furgos[i].get(0).getSecond();  
+            }
+        }
+        return ingresos;
+    }
+    
+    pbulic double calcularCosteDistancia() {
+      
+        double coste = 0;
+        
+        for(int i = 0; i < furgos.length; ++i) {
+            double distancia;
+            if(furgos[i] != null) {
+               int origen = furgos[i].get(0).getFirst();
+               int primeraParada = furgos[i].get(1).getFirst();
+               
+               distancia = abs(estaciones.get(primeraParada).getCoordX() - estaciones.get(origen).getCoordX());
+               distancia += abs(estaciones.get(primeraParada).getCoordY() - estaciones.get(origen).getCoordY());
+
+               coste += (((Integer) furgos[i].get(0).getSecond() + 9)/10) * distancia;
+               distancia = 0;
+               
+               if(furgos[i].size() == 3) {
+                   origen = furgos[i].get(1).getFirst();
+                   primeraParada = furgos[i].get(2).getFirst();
+
+                   distancia = abs(estaciones.get(primeraParada).getCoordX() - estaciones.get(origen).getCoordX());
+                   distancia += abs(estaciones.get(primeraParada).getCoordY() - estaciones.get(origen).getCoordY());
+
+                   coste += (((Integer) furgos[i].get(2).getSecond() + 9)/10) * distancia;
+                   distancia = 0;
+
+               }
+            }
+        }
+        
+        
+        return coste;
+        
+    }
     
 }
