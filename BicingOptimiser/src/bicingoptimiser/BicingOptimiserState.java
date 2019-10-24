@@ -202,34 +202,29 @@ public class BicingOptimiserState {
         double coste = 0;
         
         for(int i = 0; i < furgos.length; ++i) {
-            double distancia;
+            double distancia = 0;
             if(furgos[i] != null) {
                int origen = furgos[i].get(0).getFirst();
-               int primeraParada = furgos[i].get(1).getFirst();
+               int parada = furgos[i].get(1).getFirst();
                
-               distancia = abs(estaciones.get(primeraParada).getCoordX() - estaciones.get(origen).getCoordX());
-               distancia += abs(estaciones.get(primeraParada).getCoordY() - estaciones.get(origen).getCoordY());
+               distancia = abs(estaciones.get(parada).getCoordX() - estaciones.get(origen).getCoordX());
+               distancia += abs(estaciones.get(parada).getCoordY() - estaciones.get(origen).getCoordY());
 
                coste += (((Integer) furgos[i].get(0).getSecond() + 9)/10) * distancia;
                distancia = 0;
                
                if(furgos[i].size() == 3) {
                    origen = furgos[i].get(1).getFirst();
-                   primeraParada = furgos[i].get(2).getFirst();
+                   parada = furgos[i].get(2).getFirst();
 
-                   distancia = abs(estaciones.get(primeraParada).getCoordX() - estaciones.get(origen).getCoordX());
-                   distancia += abs(estaciones.get(primeraParada).getCoordY() - estaciones.get(origen).getCoordY());
+                   distancia = abs(estaciones.get(parada).getCoordX() - estaciones.get(origen).getCoordX());
+                   distancia += abs(estaciones.get(parada).getCoordY() - estaciones.get(origen).getCoordY());
 
                    coste += (((Integer) furgos[i].get(2).getSecond() + 9)/10) * distancia;
-                   distancia = 0;
-
                }
             }
         }
-        
-        
         return coste;
-        
     }
     
 }
