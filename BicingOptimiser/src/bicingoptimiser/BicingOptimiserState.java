@@ -197,7 +197,7 @@ public class BicingOptimiserState {
         return ingresos;
     }
     
-    pbulic double calcularCosteDistancia() {
+    public double calcularCosteDistancia() {
       
         double coste = 0;
         
