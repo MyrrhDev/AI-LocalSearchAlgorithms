@@ -43,12 +43,11 @@ public class BicingSuccessorsHillClimbing implements SuccessorFunction{
         }
         
         for(int i = 0; i < estado.origenesDispLength(); i++){
-            BicingOptimiserState newEstado = new BicingOptimiserState(estado);
-            int idDisp = newEstado.getIdOrigenDisp(i);
             for(int j = 0; j < estado.furgosLength(); j++){
-                if(newEstado.anadirParada(idDisp, j)) {
+                BicingOptimiserState newEstado = new BicingOptimiserState(estado);
+                if(newEstado.anadirParada(i, j)) {
                    StringBuffer S = new StringBuffer();
-                    S.append("estacion " + j + " anadida al trayecto que sale de la estacion " + idDisp + "\n");
+                    S.append("estacion " + j + " anadida al trayecto que sale de la estacion " + i + "\n");
                     retVal.add(new Successor(S.toString(), newEstado)); 
                 }
             }
