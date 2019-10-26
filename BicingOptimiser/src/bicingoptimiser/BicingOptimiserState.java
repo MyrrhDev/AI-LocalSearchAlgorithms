@@ -11,6 +11,13 @@ import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 /**
  *
  * @author Josep Clotet Ginovart, Fernando Marimon Llopis, Mayra Pastor Valdivia
@@ -22,18 +29,18 @@ public class BicingOptimiserState {
     private ArrayList<Pair> balances;
     public static int maxBicisFurgo = 30;
     private Estaciones estaciones;
-    private int numFlagonetas;
-    private int maxFlagonetas;
+    private int numFurgonetas;
+    private int maxFurgos;
     private int distanciaRecorrida;
    
-    public BicingOptimiserState(Estaciones estaciones, int maxFlagonetas){ //G3N3R4D0R V4C10
+    public BicingOptimiserState(Estaciones estaciones, int maxFurgonetas){ //G3N3R4D0R V4C10
         
         furgos = new ArrayList[estaciones.size()];
         origenesDisponibles = new ArrayList<Integer>();
         balances = new ArrayList<Pair>();
         this.estaciones = estaciones;
-        this.maxFlagonetas = maxFlagonetas;
-        numFlagonetas = 0;
+        this.maxFurgos = maxFurgonetas;
+        numFurgonetas = 0;
         distanciaRecorrida = 0;
         for(int i = 0; i<furgos.length; i++){
             furgos[i] = new ArrayList<Pair>();
@@ -155,12 +162,12 @@ public class BicingOptimiserState {
         if(furgos[idFurgo].size() == 0){ //Caso que no tiene ninguna parada
             furgos[idFurgo].add(new Pair(idFurgo,0));
             furgos[idFurgo].add(new Pair(idNuevaParada,0));
-            if(!(numFlagonetas < maxFlagonetas) || !anadirBicicletaNextCoste(idFurgo)){   
+            if(!(numFurgonetas < maxFurgos) || !anadirBicicletaNextCoste(idFurgo)){   
                 furgos[idFurgo].remove(1);
                 furgos[idFurgo].remove(0);
                 return false;
             }
-            ++numFlagonetas;
+            ++numFurgonetas;
             return true;
         }
     
@@ -201,8 +208,8 @@ public class BicingOptimiserState {
             }
         }
         this.estaciones = estadoACopiar.estaciones;
-        this.numFlagonetas = estadoACopiar.numFlagonetas;
-        this.maxFlagonetas = estadoACopiar.maxFlagonetas;
+        this.numFurgonetas = estadoACopiar.numFurgonetas;
+        this.maxFurgos = estadoACopiar.maxFurgos;
     }
    
     //--------------------------Heuristico--------------------------------------

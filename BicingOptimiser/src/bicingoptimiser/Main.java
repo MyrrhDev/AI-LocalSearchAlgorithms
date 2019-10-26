@@ -14,6 +14,7 @@ import aima.search.informed.SimulatedAnnealingSearch;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 
 /**
  *
@@ -25,31 +26,86 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception{
-        int maxFlagos = 20;
-        int numEstaciones = 50;
-        int numBicis = 3000;
-        int demanda = 1;
-        int seed = 1234;
+        int maxFurgos;
+        int numEstaciones;
+        int numBicis;
+        int demanda;
+        int seed;
+        int boolHill;
+        int boolHeurSimple;
+        int boolIniSimple;
+        int boolProporcionalidad;
         
-        numEstaciones;
+        Scanner in = new Scanner(System.in);
+        System.out.println("Rush hour? (Sí: 1, No: 0): ");
+        demanda = in.nextInt();
+        System.out.println("Proporcionalidad entre bicis-estacions-furgonetas? (Sí: 1, No: 0): ");
+        boolProporcionalidad = in.nextInt();
+        System.out.println("Num Estaciones: ");    
+        numEstaciones = in.nextInt();
+        if(boolProporcionalidad==1){
+            numBicis = 50*numEstaciones;
+            maxFurgos = numEstaciones/5;
+        }
+        else{
+            System.out.println("Num Bicis: ");    
+            numBicis = in.nextInt();
+            System.out.println("Num Furgos: "); 
+            maxFurgos = in.nextInt();
+        }
+ 
+        System.out.println("Seed: "); 
+        seed = in.nextInt();
         
+        System.out.println("Hill Climbing: 1, Simulated Annealing: 2: ");
+        boolHill = in.nextInt();
         
+        System.out.println("Heurístico Simple: 1, Heurístico Complejo: 2: ");
+        boolHeurSimple = in.nextInt();
+        
+        System.out.println("Estado inicial vacío: 1, Estado inicial lleno: 2: ");
+        boolIniSimple = in.nextInt();
         
         Estaciones estaciones = new Estaciones(numEstaciones, numBicis, demanda, seed);
-        BicingOptimiserState estado = new BicingOptimiserState(estaciones, maxFlagos);
-        //estado.solucionInicialSimple();
-        estado.solucionInicialCompleja();
+        BicingOptimiserState estado = new BicingOptimiserState(estaciones, maxFurgos);
+        
+        if(boolIniSimple==1)
+            estado.solucionInicialSimple();
+        else
+            estado.solucionInicialCompleja();
+        
         BicingOptimiserState q;
+        Problem prob;
+        
         try{
-            Problem prob = new Problem(estado, new BicingSuccessorsHillClimbing(), new BicingOptimiserGoalTest(), new BicingHeuristicCosteIngresos());
-            //Problem prob = new Problem(estado, new BicingSuccessorsSimAnnealing(), new BicingOptimiserGoalTest(), new BicingHeuristicCosteIngresos());
-            Search search = new HillClimbingSearch();
-            //Search search = new SimulatedAnnealingSearch(2000,100,2,0.0001);
+            if(boolHeurSimple==1){
+                if(boolHill==1)
+                    prob = new Problem(estado, new BicingSuccessorsHillClimbing(), new BicingOptimiserGoalTest(), new BicingHeuristicIngresos());
+                else
+                    prob = new Problem(estado, new BicingSuccessorsSimAnnealing(), new BicingOptimiserGoalTest(), new BicingHeuristicIngresos());
+            }
+            else{
+                if(boolHill==1)
+                    prob = new Problem(estado, new BicingSuccessorsHillClimbing(), new BicingOptimiserGoalTest(), new BicingHeuristicCosteIngresos());
+                else
+                    prob = new Problem(estado, new BicingSuccessorsSimAnnealing(), new BicingOptimiserGoalTest(), new BicingHeuristicCosteIngresos());
+            }
+            
+            Search search;
+            if(boolHill==1)
+                search= new HillClimbingSearch();
+            else
+                search = new SimulatedAnnealingSearch(2000,100,2,0.0001);
+            
             SearchAgent agent = new SearchAgent(prob,search);
-            printActions(agent.getActions());
-            System.out.println("");
-            printInstrumentation(agent.getInstrumentation());
-            System.out.println("");
+            
+            if(boolHill==1){
+                printActions(agent.getActions());
+                System.out.println("");
+                printInstrumentation(agent.getInstrumentation());
+                System.out.println("");
+            }
+            
             q = (BicingOptimiserState) search.getGoalState();
             System.out.println("==========================================================");
             System.out.println("");
@@ -63,6 +119,7 @@ public class Main {
             //System.out.print(((BicingOptimiserState) search.getGoalState()).toString());
             System.out.println("=========================================================="); 
             System.out.println(q.toString());
+        
         }
         catch (Exception e) {
             e.printStackTrace();
