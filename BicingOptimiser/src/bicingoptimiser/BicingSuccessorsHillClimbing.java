@@ -22,8 +22,6 @@ public class BicingSuccessorsHillClimbing implements SuccessorFunction{
         BicingOptimiserState estado = (BicingOptimiserState) aState;
         //BicingHeuristicIngresos ingresos = new BicingHeuristicIngresos();
 
-        
-        //permutarParadas(int idFurgo)
         for (int i = 0; i < estado.furgosLength(); i++) {
             BicingOptimiserState newEstado = new BicingOptimiserState(estado);
             if(newEstado.anadirBicicletaMismoCoste(i)) {

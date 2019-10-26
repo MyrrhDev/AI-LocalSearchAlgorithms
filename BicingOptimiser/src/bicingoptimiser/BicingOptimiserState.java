@@ -24,6 +24,7 @@ public class BicingOptimiserState {
     private Estaciones estaciones;
     private int numFlagonetas;
     private int maxFlagonetas;
+    private int distanciaRecorrida;
    
     public BicingOptimiserState(Estaciones estaciones, int maxFlagonetas){ //G3N3R4D0R V4C10
         
@@ -33,6 +34,7 @@ public class BicingOptimiserState {
         this.estaciones = estaciones;
         this.maxFlagonetas = maxFlagonetas;
         numFlagonetas = 0;
+        distanciaRecorrida = 0;
         for(int i = 0; i<furgos.length; i++){
             furgos[i] = new ArrayList<Pair>();
         }
@@ -44,7 +46,18 @@ public class BicingOptimiserState {
     
     public void solucionInicialCompleja(){
         rellenarBalances();
-        //TODO
+        
+        //show must go on:
+        boolean checkDeficit = true;
+        for(int i = 0; checkDeficit && i < origenesDisponibles.size(); i++){
+            int posIdDestino = balances.size() - (i+1);
+            int idDestino = balances.get(posIdDestino).getFirst();
+            if(balances.get(posIdDestino).getSecond() < 0) {
+                anadirParada(i,idDestino);
+            }
+            else
+                checkDeficit = false;
+        }
     }
     
     private void rellenarBalances(){
@@ -208,7 +221,7 @@ public class BicingOptimiserState {
     public double calcularCosteDistancia() {
       
         double coste = 0;
-        
+        distanciaRecorrida = 0;
         for(int i = 0; i < furgos.length; ++i) {
             double distancia = 0;
             if(furgos[i].size() != 0) {
@@ -219,8 +232,8 @@ public class BicingOptimiserState {
                     int x = 0;  if(j == 1) x = 2; //para tener en cuenta que de 1a a 2a parada llevas menos bicis
                     distancia = abs(estaciones.get(parada).getCoordX() - estaciones.get(origen).getCoordX());
                     distancia += abs(estaciones.get(parada).getCoordY() - estaciones.get(origen).getCoordY());
-                    
-                    coste += (((Integer) ((Pair) furgos[i].get(x)).getSecond() + 9)/10) * distancia;
+                    distanciaRecorrida += distancia;
+                    coste += (((Integer) ((Pair) furgos[i].get(x)).getSecond() + 9)/10) * distancia/1000;
                     distancia = 0;
                 }
             }
@@ -228,4 +241,38 @@ public class BicingOptimiserState {
         return coste;
     }
     
+//    public double excedenteTeorico(){
+//        double excTeorico = 0;
+//        for(int i = 0; i < furgos.length; i++){
+//            Integer idEstacion = new Integer(i);
+//            int bicisExcedentes = balances.stream().filter(estacion -> idEstacion.equals(estacion.getFirst())).findFirst().get().getSecond();
+//            if(bicisExcedentes > 0) excTeorico += bicisExcedentes;
+//        }
+//        return excTeorico;
+//    }
+    
+    
+   
+    public String toString() {
+        StringBuffer resultado = new StringBuffer();
+        resultado.append("\n");
+        resultado.append("Trayectos de las furgonetas:\n");
+        resultado.append("\n");
+        for (int i = 0; i < furgos.length; i++) {
+            if(!furgos[i].isEmpty()) {
+                resultado.append("Una furgo sale de la estacion " + i + " con " + ((Pair)furgos[i].get(1)).getSecond() + " bicicletas: \n"); 
+                for(int j = 1; j < furgos[i].size(); ++j) {
+                   resultado.append("\tDeja " + ((Pair)furgos[i].get(j)).getSecond() + " bicicletas a la estacion " + ((Pair)furgos[i].get(j)).getFirst() + "\n");
+                }
+                resultado.append("\n");
+            }
+        }
+        resultado.append("==========================================================\n");
+        calcularCosteDistancia();
+        resultado.append("\n");
+        resultado.append("Las furgonetas han recorrido un total de " + distanciaRecorrida/1000.0 + " kilómetros\n");
+        return resultado.toString();
+    	
+    	
+    }
 }

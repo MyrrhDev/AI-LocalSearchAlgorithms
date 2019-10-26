@@ -14,6 +14,7 @@ public class BicingHeuristicCosteIngresos implements HeuristicFunction {
 // Aquest valora els costos. verificar que se puede con int la sig. funcion:
 		public double getHeuristicValue(Object state) {
 			BicingOptimiserState estado = (BicingOptimiserState ) state;
-                        return estado.calcularCosteDistancia()-estado.getIngresos(); //AIMA minimiza y queremos maximizar
+                        return estado.calcularCosteDistancia()-estado.getIngresos();
+                        //-(estado.excedenteTeorico()/2); //AIMA minimiza y queremos maximizar
 		}
 }
