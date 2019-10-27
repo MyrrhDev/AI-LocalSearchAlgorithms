@@ -22,7 +22,7 @@ import java.util.Scanner;
  * @author Josep Clotet Ginovart, Fernando Marimon Llopis, Mayra Pastor Valdivia
  */
 public class Main {
-    
+
     /**
      * @param args the command line arguments
      */
@@ -36,10 +36,10 @@ public class Main {
         int boolHeurSimple;
         int boolIniSimple;
         int boolProporcionalidad;
-        
+
         Long startTime, stopTime;
         List<Long> elapsedTime = new ArrayList<Long>();
-        
+
         int numIter; int bucle = 0;
         Scanner in = new Scanner(System.in);
         System.out.println("Número de ejecuciones: ");
@@ -47,76 +47,77 @@ public class Main {
         System.out.println("Introducir parámetros de uno en uno (1) o separados por comas (2): ");
         int method;
         method = in.nextInt();
-        
-            if(method == 1){
-                System.out.println("Rush hour? (Sí: 1, No: 0): ");
-                demanda = in.nextInt();
-                System.out.println("Proporcionalidad entre bicis-estacions-furgonetas? (Sí: 1, No: 0): ");
-                boolProporcionalidad = in.nextInt();
-                System.out.println("Num Estaciones: ");    
-                numEstaciones = in.nextInt();
-                if(boolProporcionalidad==1){
-                    numBicis = 50*numEstaciones;
-                    maxFurgos = numEstaciones/5;
-                }
-                else{
-                    System.out.println("Num Bicis: ");    
-                    numBicis = in.nextInt();
-                    System.out.println("Num Furgos: "); 
-                    maxFurgos = in.nextInt();
-                }
 
-                System.out.println("Seed: "); 
-                seed = in.nextInt();
-
-                System.out.println("Hill Climbing: 1, Simulated Annealing: 2: ");
-                boolHill = in.nextInt();
-
-                System.out.println("Heurístico Simple: 1, Heurístico Complejo: 2: ");
-                boolHeurSimple = in.nextInt();
-
-                System.out.println("Estado inicial vacío: 1, Estado inicial lleno: 2: ");
-                boolIniSimple = in.nextInt();
+        if(method == 1){
+            System.out.println("Rush hour? (Sí: 1, No: 0): ");
+            demanda = in.nextInt();
+            System.out.println("Proporcionalidad entre bicis-estacions-furgonetas? (Sí: 1, No: 0): ");
+            boolProporcionalidad = in.nextInt();
+            System.out.println("Num Estaciones: ");
+            numEstaciones = in.nextInt();
+            if(boolProporcionalidad==1){
+                numBicis = 50*numEstaciones;
+                maxFurgos = numEstaciones/5;
             }
             else{
-                System.out.println("INTRODUCIR VALORES SEPARADOS POR COMAS EN ESTE ORDEN: ");
-                System.out.println("Rush hour? (Sí: 1, No: 0): ");
-                System.out.println("Proporcionalidad entre bicis-estacions-furgonetas? (Sí: 1, No: 0): ");
-                System.out.println("Num Estaciones: ");
-                System.out.println("    Si no se requiere proporcionalidad -> Num Bicis: ");    
-                System.out.println("    Si no se requiere proporcionalidad -> Num Furgos: "); 
-                System.out.println("Seed: ");
-                System.out.println("Hill Climbing: 1, Simulated Annealing: 2: ");
-                System.out.println("Heurístico Simple: 1, Heurístico Complejo: 2: ");
-                System.out.println("Estado inicial vacío: 1, Estado inicial lleno: 2: ");
-                
-                in.nextLine(); //nextInt() does not consume the '\n', so the next call to nextLine() consumes it and then it's waiting to read the input 
-                String input = in.nextLine();
-                String[] inputArray = input.split(",");
-
-                int orden = 0;
-                demanda = Integer.parseInt(inputArray[orden]); orden++;
-                boolProporcionalidad = Integer.parseInt(inputArray[orden]); orden++;
-                numEstaciones = Integer.parseInt(inputArray[orden]); orden++;
-                if(boolProporcionalidad == 1){
-                    numBicis = 50*numEstaciones;
-                    maxFurgos = numEstaciones/5;
-                    seed = Integer.parseInt(inputArray[orden]); orden++;
-                    boolHill = Integer.parseInt(inputArray[orden]); orden++;
-                    boolHeurSimple = Integer.parseInt(inputArray[orden]); orden++;
-                    boolIniSimple = Integer.parseInt(inputArray[orden]); orden++;
-                }
-                else{
-                    numBicis = Integer.parseInt(inputArray[orden]); orden++;
-                    maxFurgos = Integer.parseInt(inputArray[orden]);orden++;
-                    seed = Integer.parseInt(inputArray[orden]); orden++;
-                    boolHill = Integer.parseInt(inputArray[orden]); orden++;
-                    boolHeurSimple = Integer.parseInt(inputArray[orden]); orden++;
-                    boolIniSimple = Integer.parseInt(inputArray[orden]); orden++;
-                }
+                System.out.println("Num Bicis: ");
+                numBicis = in.nextInt();
+                System.out.println("Num Furgos: ");
+                maxFurgos = in.nextInt();
             }
-        
+
+            System.out.println("Seed: ");
+            seed = in.nextInt();
+
+            System.out.println("Hill Climbing: 1, Simulated Annealing: 2: ");
+            boolHill = in.nextInt();
+
+            System.out.println("Heurístico Simple: 1, Heurístico Complejo: 2: ");
+            boolHeurSimple = in.nextInt();
+
+            System.out.println("Estado inicial vacío: 1, Estado inicial lleno: 2: ");
+            boolIniSimple = in.nextInt();
+        }
+        else{
+            System.out.println("INTRODUCIR VALORES SEPARADOS POR COMAS EN ESTE ORDEN: ");
+            System.out.println("Rush hour? (Sí: 1, No: 0): ");
+            System.out.println("Proporcionalidad entre bicis-estacions-furgonetas? (Sí: 1, No: 0): ");
+            System.out.println("Num Estaciones: ");
+            System.out.println("    Si no se requiere proporcionalidad -> Num Bicis: ");
+            System.out.println("    Si no se requiere proporcionalidad -> Num Furgos: ");
+            System.out.println("Seed: ");
+            System.out.println("Hill Climbing: 1, Simulated Annealing: 2: ");
+            System.out.println("Heurístico Simple: 1, Heurístico Complejo: 2: ");
+            System.out.println("Estado inicial vacío: 1, Estado inicial lleno: 2: ");
+
+            in.nextLine(); //nextInt() does not consume the '\n', so the next call to nextLine() consumes it and then it's waiting to read the input
+            String input = in.nextLine();
+            String[] inputArray = input.split(",");
+
+            int orden = 0;
+            demanda = Integer.parseInt(inputArray[orden]); orden++;
+            boolProporcionalidad = Integer.parseInt(inputArray[orden]); orden++;
+            numEstaciones = Integer.parseInt(inputArray[orden]); orden++;
+            if(boolProporcionalidad == 1){
+                numBicis = 50*numEstaciones;
+                maxFurgos = numEstaciones/5;
+                seed = Integer.parseInt(inputArray[orden]); orden++;
+                boolHill = Integer.parseInt(inputArray[orden]); orden++;
+                boolHeurSimple = Integer.parseInt(inputArray[orden]); orden++;
+                boolIniSimple = Integer.parseInt(inputArray[orden]); orden++;
+            }
+            else{
+                numBicis = Integer.parseInt(inputArray[orden]); orden++;
+                maxFurgos = Integer.parseInt(inputArray[orden]);orden++;
+                seed = Integer.parseInt(inputArray[orden]); orden++;
+                boolHill = Integer.parseInt(inputArray[orden]); orden++;
+                boolHeurSimple = Integer.parseInt(inputArray[orden]); orden++;
+                boolIniSimple = Integer.parseInt(inputArray[orden]); orden++;
+            }
+        }
+
         System.out.println("=============================START=============================");
+        double mediaResultados = 0;
         do {
             System.out.println("============================ejecución "+(bucle+1)+"============================");
             startTime = System.currentTimeMillis();
@@ -149,10 +150,9 @@ public class Main {
                 if(boolHill==1)
                     search= new HillClimbingSearch();
                 else
-                    search = new SimulatedAnnealingSearch(2000,100,2,0.0001);
+                    search = new SimulatedAnnealingSearch(10000,100,2,0.01);
 
                 SearchAgent agent = new SearchAgent(prob,search);
-
                 if(boolHill==1){
                     printActions(agent.getActions());
                     System.out.println("");
@@ -169,10 +169,13 @@ public class Main {
                 System.out.println("Costes: "+q.calcularCosteDistancia());
                 System.out.println("Ingresos - Costes: "+(q.getIngresos()-q.calcularCosteDistancia()) );
                 System.out.println("");
+                mediaResultados += q.getIngresos();
 
                 //System.out.print(((BicingOptimiserState) search.getGoalState()).toString());
-                System.out.println("=========================================================="); 
-                System.out.println(q.toString());
+                if(boolHill == 1) {
+                    System.out.println("==========================================================");
+                    System.out.println(q.toString());
+                }
 
             }
             catch (Exception e) {
@@ -182,9 +185,11 @@ public class Main {
             stopTime = System.currentTimeMillis();
             elapsedTime.add(stopTime - startTime);
 
-            bucle++;   
-        } while (bucle < numIter);  
-        
+            bucle++;
+        } while (bucle < numIter);
+
+        System.out.println("\n\nValor medio de los resultados: "+mediaResultados/numIter+'\n');
+
         System.out.println("========================tiempos de ejecución========================");
         Long sum = 0L;
         if(numIter != 1) {
@@ -194,16 +199,16 @@ public class Main {
                     sum += elapsedTime.get(i);
                 }
             }
-            System.out.println("TIEMPO MEDIO: "+sum/(elapsedTime.size()-1)+" ms");   
+            System.out.println("TIEMPO MEDIO: "+sum/(elapsedTime.size()-1)+" ms");
         }
         else{
-            System.out.println("TIEMPO MEDIO: "+elapsedTime.get(0)+" ms");   
+            System.out.println("TIEMPO MEDIO: "+elapsedTime.get(0)+" ms");
         }
-        
+
         System.out.println("=============================END=============================");
     }
-    
-     private static void printActions(List actions) {
+
+    private static void printActions(List actions) {
         for (int i = 0; i < actions.size(); i++) {
             String action = (String) actions.get(i);
             System.out.println(action);
@@ -219,5 +224,5 @@ public class Main {
         }
 
     }
-    
+
 }
