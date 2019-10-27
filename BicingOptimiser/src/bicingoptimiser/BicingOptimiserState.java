@@ -60,7 +60,7 @@ public class BicingOptimiserState {
             int posIdDestino = balances.size() - (i+1);
             int idDestino = balances.get(posIdDestino).getFirst();
             if(balances.get(posIdDestino).getSecond() < 0) {
-                anadirParada(i,idDestino);
+                anadirParada(i,idDestino,true);
             }
             else
                 checkDeficit = false;
@@ -114,18 +114,19 @@ public class BicingOptimiserState {
         Pair x = balances.stream().filter(estacion -> idParadaOrigen.equals(estacion.getFirst())).findFirst().get();
         Integer bicisDisponibles = x.getSecond();
         Integer bicis = min(bicisDisponibles,(maxBicisFurgo-numBicisActual)%10);
-        
-        for(int i = 1; i < furgos[idFurgo].size(); i++) {
-            Integer idParadaDestino = ((Pair)furgos[idFurgo].get(i)).getFirst();
-            Pair y = balances.stream().filter(estacion -> idParadaDestino.equals(estacion.getFirst())).findFirst().get();
-            Integer demanda = y.getSecond();
-            if (demanda < 0) {
-                Integer bicisfinal = min(-demanda,bicis);
-                y.setSecond(demanda + bicisfinal);//Balance destino
-                x.setSecond(bicisDisponibles - bicisfinal); //Balance origen
-                ((Pair)furgos[idFurgo].get(0)).setSecond(numBicisActual + bicisfinal);   //Furgos origen
-                ((Pair)furgos[idFurgo].get(i)).setSecond(((Pair)furgos[idFurgo].get(i)).getSecond()+bicisfinal); //Furgos destino
-                return true;
+        if(bicis > 0) {
+            for (int i = 1; i < furgos[idFurgo].size(); i++) {
+                Integer idParadaDestino = ((Pair) furgos[idFurgo].get(i)).getFirst();
+                Pair y = balances.stream().filter(estacion -> idParadaDestino.equals(estacion.getFirst())).findFirst().get();
+                Integer demanda = y.getSecond();
+                if (demanda < 0) {
+                    Integer bicisfinal = min(-demanda, bicis);
+                    y.setSecond(demanda + bicisfinal);//Balance destino
+                    x.setSecond(bicisDisponibles - bicisfinal); //Balance origen
+                    ((Pair) furgos[idFurgo].get(0)).setSecond(numBicisActual + bicisfinal);   //Furgos origen
+                    ((Pair) furgos[idFurgo].get(i)).setSecond(((Pair) furgos[idFurgo].get(i)).getSecond() + bicisfinal); //Furgos destino
+                    return true;
+                }
             }
         }
         return false;    
@@ -140,29 +141,33 @@ public class BicingOptimiserState {
         Integer bicisDisponibles = x.getSecond(); //Cuantas bicicletas puede dar la estacion idParadaOrigen
         Integer nivelNext = 1+((numBicisActual+9)/10);
         Integer bicis = min(bicisDisponibles,(10*nivelNext-numBicisActual));
-        
-        for(int i = 1; i < furgos[idFurgo].size(); i++) {
-            Integer idParadaDestino = ((Pair)furgos[idFurgo].get(i)).getFirst();
-            Pair y = balances.stream().filter(estacion -> idParadaDestino.equals(estacion.getFirst())).findFirst().get();
-            Integer demanda = y.getSecond(); //balance
-            if (demanda < 0) {
-                Integer bicisfinal = min(-demanda,bicis);
-                y.setSecond(y.getSecond()+bicisfinal);          //Balance destino
-                x.setSecond(x.getSecond()-bicisfinal);          //Balance origen
-                ((Pair)furgos[idFurgo].get(0)).setSecond(((Pair)furgos[idFurgo].get(0)).getSecond()+bicisfinal);    //Furgos origen
-                ((Pair)furgos[idFurgo].get(i)).setSecond(((Pair)furgos[idFurgo].get(i)).getSecond()+bicisfinal);    //Furgos destino
-                return true;
+        if(bicis > 0) {
+            for (int i = 1; i < furgos[idFurgo].size(); i++) {
+                Integer idParadaDestino = ((Pair) furgos[idFurgo].get(i)).getFirst();
+                Pair y = balances.stream().filter(estacion -> idParadaDestino.equals(estacion.getFirst())).findFirst().get();
+                Integer demanda = y.getSecond(); //balance
+                if (demanda < 0) {
+                    Integer bicisfinal = min(-demanda, bicis);
+                    y.setSecond(y.getSecond() + bicisfinal);          //Balance destino
+                    x.setSecond(x.getSecond() - bicisfinal);          //Balance origen
+                    ((Pair) furgos[idFurgo].get(0)).setSecond(((Pair) furgos[idFurgo].get(0)).getSecond() + bicisfinal);    //Furgos origen
+                    ((Pair) furgos[idFurgo].get(i)).setSecond(((Pair) furgos[idFurgo].get(i)).getSecond() + bicisfinal);    //Furgos destino
+                    return true;
+                }
             }
         }
         return false; 
     }
     
-    public boolean anadirParada(int idDisponible, int idNuevaParada) {
+    public boolean anadirParada(int idDisponible, int idNuevaParada, boolean NextCoste) {
+        boolean x;
         Integer idFurgo = origenesDisponibles.get(idDisponible);
         if(furgos[idFurgo].size() == 0){ //Caso que no tiene ninguna parada
             furgos[idFurgo].add(new Pair(idFurgo,0));
             furgos[idFurgo].add(new Pair(idNuevaParada,0));
-            if(!(numFurgonetas < maxFurgos) || !anadirBicicletaNextCoste(idFurgo)){   
+            if(NextCoste) x = !anadirBicicletaNextCoste(idFurgo);
+            else x = !anadirBicicletaMismoCoste(idFurgo);
+            if(!(numFurgonetas < maxFurgos) || x){
                 furgos[idFurgo].remove(1);
                 furgos[idFurgo].remove(0);
                 return false;
@@ -170,16 +175,19 @@ public class BicingOptimiserState {
             ++numFurgonetas;
             return true;
         }
-    
         furgos[idFurgo].add(new Pair(idNuevaParada,0)); //Caso que tiene una parada
-        if(!anadirBicicletaNextCoste(idFurgo)) {
-            furgos[idFurgo].remove(1);
+        if(NextCoste) x = !anadirBicicletaNextCoste(idFurgo);
+        else x = !anadirBicicletaMismoCoste(idFurgo);
+        if(x || ((Pair)furgos[idFurgo].get(2)).getSecond() == 0) {
+            furgos[idFurgo].remove(2);
             return false;
         }
         origenesDisponibles.remove(idDisponible);
         return true;
     }
-    
+
+
+
     public boolean permutarParadas(int idFurgo) {
         if(furgos[idFurgo].size() == 0) return false;
         if(furgos[idFurgo].size() != 3) return false;
@@ -218,8 +226,8 @@ public class BicingOptimiserState {
         double ingresos = 0;
         
         for(int i = 0; i < furgos.length; ++i) {
-            if(furgos[i].size() != 0) {
-              ingresos += (Integer) ((Pair) furgos[i].get(0)).getSecond();  
+            if (furgos[i].size() != 0) {
+                ingresos += (Integer) ((Pair) furgos[i].get(0)).getSecond();
             }
         }
         return ingresos;
@@ -248,15 +256,17 @@ public class BicingOptimiserState {
         return coste;
     }
     
-//    public double excedenteTeorico(){
-//        double excTeorico = 0;
-//        for(int i = 0; i < furgos.length; i++){
-//            Integer idEstacion = new Integer(i);
-//            int bicisExcedentes = balances.stream().filter(estacion -> idEstacion.equals(estacion.getFirst())).findFirst().get().getSecond();
-//            if(bicisExcedentes > 0) excTeorico += bicisExcedentes;
-//        }
-//        return excTeorico;
-//    }
+    public double excedenteTeorico(){
+        double excTeorico = 0;
+        for(int i = 0; i < furgos.length; i++){
+            Integer idEstacion = new Integer(i);
+            if(!furgos[i].isEmpty()) {
+                int bicisExcedentes = balances.stream().filter(estacion -> idEstacion.equals(estacion.getFirst())).findFirst().get().getSecond();
+                excTeorico += bicisExcedentes;
+            }
+        }
+        return excTeorico;
+    }
     
     
    
@@ -267,7 +277,7 @@ public class BicingOptimiserState {
         resultado.append("\n");
         for (int i = 0; i < furgos.length; i++) {
             if(!furgos[i].isEmpty()) {
-                resultado.append("Una furgo sale de la estacion " + i + " con " + ((Pair)furgos[i].get(1)).getSecond() + " bicicletas: \n"); 
+                resultado.append("Una furgo sale de la estacion " + i + " con " + ((Pair)furgos[i].get(0)).getSecond() + " bicicletas: \n");
                 for(int j = 1; j < furgos[i].size(); ++j) {
                    resultado.append("\tDeja " + ((Pair)furgos[i].get(j)).getSecond() + " bicicletas a la estacion " + ((Pair)furgos[i].get(j)).getFirst() + "\n");
                 }
