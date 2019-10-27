@@ -32,6 +32,7 @@ public class BicingOptimiserState {
     private int numFurgonetas;
     private int maxFurgos;
     private int distanciaRecorrida;
+    private int cantidadOrigenesDisponibles;
    
     public BicingOptimiserState(Estaciones estaciones, int maxFurgonetas){ //G3N3R4D0R V4C10
         
@@ -84,6 +85,7 @@ public class BicingOptimiserState {
             origenesDisponibles.add((Integer)balances.get(g).getFirst());
             ++g;
         }
+        cantidadOrigenesDisponibles = g;
     }
     
     //--------------------------GETTERS-----------------------------------
@@ -102,6 +104,14 @@ public class BicingOptimiserState {
     
     public int getIdOrigenDisp(int i){
         return origenesDisponibles.get(i);
+    }
+
+    public int getCantidadOrigenesDisponibles() {
+        return cantidadOrigenesDisponibles;
+    }
+
+    public int getIdBalances(int i) {
+        return balances.get(i).getFirst();
     }
     
     //--------------------------OPERADORES-------------------------------
@@ -186,7 +196,21 @@ public class BicingOptimiserState {
         return true;
     }
 
-
+    public boolean eliminarParada(Integer idFurgo) {
+        if(furgos[idFurgo].isEmpty()) return false;
+        int paradaEliminar = furgos[idFurgo].size()-1;
+        if(paradaEliminar == 2) origenesDisponibles.add(idFurgo);
+        Integer idParadaEliminada = ((Pair)furgos[idFurgo].get(paradaEliminar)).getFirst();
+        int bicisADevolver = ((Pair)furgos[idFurgo].get(paradaEliminar)).getSecond();
+        Pair balanceEstacionEliminada = balances.stream().filter(estacion -> idParadaEliminada.equals(estacion.getFirst())).findFirst().get();
+        balanceEstacionEliminada.setSecond(balanceEstacionEliminada.getSecond()-bicisADevolver); //Modificamos el balance ya que ahora no le damos las bicis
+        Pair balanceEstacionOrigen = balances.stream().filter(estacion -> idFurgo.equals(estacion.getFirst())).findFirst().get();
+        balanceEstacionOrigen.setSecond(balanceEstacionOrigen.getSecond()+bicisADevolver); //Modificamos el balance ya que le devolvemos las bicis que daba
+        ((Pair)furgos[idFurgo].get(0)).setSecond(((Pair)furgos[idFurgo].get(0)).getSecond()-bicisADevolver); //Modificamos lo llena que estaba la furgo
+        furgos[idFurgo].remove(paradaEliminar); //Eliminamos la parada del trayecto
+        if(paradaEliminar == 1) furgos[idFurgo] = new ArrayList<Pair>(); //Si solo habia una parada deshacemos el trayecto entero
+        return true;
+    }
 
     public boolean permutarParadas(int idFurgo) {
         if(furgos[idFurgo].size() == 0) return false;
@@ -218,6 +242,7 @@ public class BicingOptimiserState {
         this.estaciones = estadoACopiar.estaciones;
         this.numFurgonetas = estadoACopiar.numFurgonetas;
         this.maxFurgos = estadoACopiar.maxFurgos;
+        this.cantidadOrigenesDisponibles = estadoACopiar.cantidadOrigenesDisponibles;
     }
    
     //--------------------------Heuristico--------------------------------------
