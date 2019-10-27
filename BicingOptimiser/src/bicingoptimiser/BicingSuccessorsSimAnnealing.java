@@ -48,10 +48,16 @@ public class BicingSuccessorsSimAnnealing implements SuccessorFunction{
         for(int j = 0; j < 4; j++){
             int lucky2 = myRandom.nextInt(estado.furgosLength());
             BicingOptimiserState newEstado = new BicingOptimiserState(estado);
-            if(newEstado.anadirParada(rand, lucky2)) {
+            if(newEstado.anadirParada(rand, lucky2,true)) {
                StringBuffer S = new StringBuffer();
                 S.append("estacion " + lucky2 + " anadida al trayecto que sale de la estacion " + rand + "\n");
                 retVal.add(new Successor(S.toString(), newEstado)); 
+            }
+            newEstado = new BicingOptimiserState(estado);
+            if(newEstado.anadirParada(rand, lucky2,false)) {
+                StringBuffer S = new StringBuffer();
+                S.append("estacion " + lucky2 + " anadida al trayecto que sale de la estacion " + rand + "\n");
+                retVal.add(new Successor(S.toString(), newEstado));
             }
         }
 
