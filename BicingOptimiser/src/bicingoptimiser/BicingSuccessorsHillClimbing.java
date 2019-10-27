@@ -57,6 +57,16 @@ public class BicingSuccessorsHillClimbing implements SuccessorFunction{
             }
         }
 
+        for(int i = 0; i < estado.getCantidadOrigenesDisponibles(); i++) {
+            int idOrigenPosible = estado.getIdBalances(i);
+            BicingOptimiserState newEstado = new BicingOptimiserState(estado);
+            if(newEstado.eliminarParada(idOrigenPosible)) {
+                StringBuffer S = new StringBuffer();
+                S.append("se ha eliminado la ultima parada del trayecto que salia de la estacion " + idOrigenPosible + "\n");
+                retVal.add(new Successor(S.toString(), newEstado));
+            }
+        }
+
 //        for(int i = 0; i < estado.furgosLength(); i++) {
 //            BicingOptimiserState newEstado = new BicingOptimiserState(estado);
 //            if(newEstado.permutarParadas(i)) {
@@ -65,7 +75,7 @@ public class BicingSuccessorsHillClimbing implements SuccessorFunction{
 //                retVal.add(new Successor(S.toString(), newEstado));
 //            }
 //        }
-//
+//1 2 0,1,25,1234,2,1,1
          return retVal;
     }
 }
