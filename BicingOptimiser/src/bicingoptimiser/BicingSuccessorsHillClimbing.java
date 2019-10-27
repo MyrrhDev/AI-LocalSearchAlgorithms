@@ -43,23 +43,29 @@ public class BicingSuccessorsHillClimbing implements SuccessorFunction{
         for(int i = 0; i < estado.origenesDispLength(); i++){
             for(int j = 0; j < estado.furgosLength(); j++){
                 BicingOptimiserState newEstado = new BicingOptimiserState(estado);
-                if(newEstado.anadirParada(i, j)) {
+                if(newEstado.anadirParada(i, j, true)) {
                    StringBuffer S = new StringBuffer();
                     S.append("estacion " + j + " anadida al trayecto que sale de la estacion " + i + "\n");
-                    retVal.add(new Successor(S.toString(), newEstado)); 
+                    retVal.add(new Successor(S.toString(), newEstado));
+                }
+                newEstado = new BicingOptimiserState(estado);
+                if(newEstado.anadirParada(i, j, false)) {
+                    StringBuffer S = new StringBuffer();
+                    S.append("estacion " + j + " anadida al trayecto que sale de la estacion " + i + "\n");
+                    retVal.add(new Successor(S.toString(), newEstado));
                 }
             }
         }
-        
-        for(int i = 0; i < estado.furgosLength(); i++) {
-            BicingOptimiserState newEstado = new BicingOptimiserState(estado);
-            if(newEstado.permutarParadas(i)) {
-                StringBuffer S = new StringBuffer();
-                S.append("se han permutado las paradas del trayecto con origen en la estacion " + i + "\n");
-                retVal.add(new Successor(S.toString(), newEstado));
-            }
-        } 
-        
-        return retVal;
+
+//        for(int i = 0; i < estado.furgosLength(); i++) {
+//            BicingOptimiserState newEstado = new BicingOptimiserState(estado);
+//            if(newEstado.permutarParadas(i)) {
+//                StringBuffer S = new StringBuffer();
+//                S.append("se han permutado las paradas del trayecto con origen en la estacion " + i + "\n");
+//                retVal.add(new Successor(S.toString(), newEstado));
+//            }
+//        }
+//
+         return retVal;
     }
 }
