@@ -187,13 +187,18 @@ public class Main {
         
         System.out.println("========================tiempos de ejecución========================");
         Long sum = 0L;
-        for(int i = 0; i < elapsedTime.size(); i++){
-            if(i != 0){ //la primera ejecución se descarta por temas de caché
-                System.out.println("ejecución "+i+": "+elapsedTime.get(i)+" ms");
-                sum += elapsedTime.get(i);
+        if(numIter != 1) {
+            for(int i = 0; i < elapsedTime.size(); i++){
+                if(i != 0){ //la primera ejecución se descarta por temas de caché
+                    System.out.println("ejecución "+i+": "+elapsedTime.get(i)+" ms");
+                    sum += elapsedTime.get(i);
+                }
             }
+            System.out.println("TIEMPO MEDIO: "+sum/(elapsedTime.size()-1)+" ms");   
         }
-        System.out.println("TIEMPO MEDIO: "+sum/(elapsedTime.size()-1)+" ms");
+        else{
+            System.out.println("TIEMPO MEDIO: "+elapsedTime.get(0)+" ms");   
+        }
         
         System.out.println("=============================END=============================");
     }
