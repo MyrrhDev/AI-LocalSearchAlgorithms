@@ -75,7 +75,7 @@ public class BicingSuccessorsHillClimbing implements SuccessorFunction{
 //                retVal.add(new Successor(S.toString(), newEstado));
 //            }
 //        }
-//1 2 0,1,25,1234,2,1,1
+
          return retVal;
     }
 }
