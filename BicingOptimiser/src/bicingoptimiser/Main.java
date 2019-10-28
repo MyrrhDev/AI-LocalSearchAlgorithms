@@ -171,7 +171,6 @@ public class Main {
                 System.out.println("");
                 mediaResultados += q.getIngresos();
 
-                //System.out.print(((BicingOptimiserState) search.getGoalState()).toString());
                 if(boolHill == 1) {
                     System.out.println("==========================================================");
                     System.out.println(q.toString());
