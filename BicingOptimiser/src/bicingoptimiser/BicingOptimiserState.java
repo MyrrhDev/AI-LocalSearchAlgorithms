@@ -34,7 +34,7 @@ public class BicingOptimiserState {
     private int distanciaRecorrida;
     private int cantidadOrigenesDisponibles;
    
-    public BicingOptimiserState(Estaciones estaciones, int maxFurgonetas){ //G3N3R4D0R V4C10
+    public BicingOptimiserState(Estaciones estaciones, int maxFurgonetas){ 
         
         furgos = new ArrayList[estaciones.size()];
         origenesDisponibles = new ArrayList<Integer>();
@@ -55,7 +55,6 @@ public class BicingOptimiserState {
     public void solucionInicialCompleja(){
         rellenarBalances();
         
-        //show must go on:
         boolean checkDeficit = true;
         for(int i = 0; checkDeficit && i < origenesDisponibles.size(); i++){
             int posIdDestino = balances.size() - (i+1);
